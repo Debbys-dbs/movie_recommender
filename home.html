@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movie recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container pt-3">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Hello !!</h1>
+                <h3>Welcome to debb's movie recommender</h3>
+
+                <div class="ben">
+                    <input type="text" id="movieInput" placeholder="Enter a movie title">
+                    <button onclick="getRecommendations()" class="btn btn-info">Get Recommendations</button>
+                    <ul id="recommendations"></ul>
+
+                </div>
+            </div>
+            <div class="col-md-6 " >
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img src="{{ url_for('static', filename='images/aladin.jpg') }}"  alt="aladin" width="200" height="200">
+                        <img src="{{ url_for('static', filename='images/avengers.jpg') }}"  alt="avengers" width="200" height="200">
+                        <img src="{{ url_for('static', filename='images/hulk.jpg') }}"  alt="hulk" width="200" height="200">
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="{{ url_for('static', filename='images/ape.jpg') }}"  alt="ape" width="200" height="200">
+                        <img src="{{ url_for('static', filename='images/Toy_Story.jpg') }}"  alt="ape" width="200" height="200">
+                    
+                        <img src="{{ url_for('static', filename='images/mermaid.jpg') }}"  alt="mermaid" width="200" height="200">
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="{{ url_for('static', filename='images/images.jpg') }}"  alt="images" width="200" height="200">
+                        <img src="{{ url_for('static', filename='images/thor.jpg') }}"  alt="thor" width="200" height="200">
+                        <img src="{{ url_for('static', filename='images/oo7.jpg') }}"  alt="007" width="200" height="200">
+                    </div>
+                </div>    
+            </div>
+        </div>
+        
+
+
+    </div>
+
+    
+<script>
+    async function getRecommendations() {
+        const title = document.getElementById('movieInput').value;
+        const response = await fetch('/movie', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title })
+        });
+        const data = await response.json();
+        const list = document.getElementById('recommendations');
+        list.innerHTML = '';
+        if (data.error) {
+            list.innerHTML = `<li>${data.error}</li>`;
+            return;
+        }
+        data.forEach(movie => {
+            const item = document.createElement('li');
+            item.textContent = `${movie.title} (${movie.genres}) `;
+            list.appendChild(item);
+        });
+    }
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+</body>
+</html>
